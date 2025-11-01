@@ -7,19 +7,21 @@ export function generateAccessToken(payload: object) {
 export function generateRefreshToken(payload: object) {
   return jwt.sign(payload, REFRESH_TOEKN, { expiresIn: "7d" });
 }
-export function verifyAccessToken(token: string) {
+export function verifyAccessToken(token: string): boolean {
   try {
-    return jwt.verify(token, ACCESS_TOKEN);
+    jwt.verify(token, ACCESS_TOKEN);
+    return true;
   } catch (error) {
-    console.log(error);
-    return null;
+    console.error("Invalid token:", error);
+    return false;
   }
 }
 export function verifyRefreshToken(token: string) {
   try {
-    return jwt.verify(token, REFRESH_TOEKN);
+    jwt.verify(token, REFRESH_TOEKN);
+    return true;
   } catch (error) {
     console.log(error);
-    return null;
+    return false;
   }
 }

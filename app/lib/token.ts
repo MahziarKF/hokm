@@ -21,3 +21,4 @@ export default function getAuthTokens(payload: object): tokenType {
     };
   }
 }
+
