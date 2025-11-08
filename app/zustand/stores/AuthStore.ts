@@ -43,7 +43,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
           gamesplayed: userStore.user?.gamesplayed,
         }),
       });
-
+      
       // ✅ Parse response JSON
       const data = await res.json();
 

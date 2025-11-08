@@ -1,3 +1,4 @@
+"use client";
 import { LinearGradient } from "react-text-gradients";
 import Button from "../buttons/Button";
 import ReemKufiText from "../layouts/fonts/reemKufi";
@@ -5,16 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Spade } from "../khal/hearts";
 import JokerCard from "./jokerCard";
-import Link from "next/link";
-import { cookies } from "next/headers";
-import { getToken } from "@/app/lib/tokenValidation";
+import { useUserStore } from "@/app/zustand/stores/useUserStore";
 import TestButton from "../test/anyButton";
 
-export default async function DescLanding() {
-  const access = await getToken("access");
-  const refresh = await getToken("refresh");
-  // Simulating user logged in state
-  const user = false;
+export default function DescLanding() {
+  const user = useUserStore((s) => s.user);
+  console.log("User from token:", user);
 
   return (
     <div className="relative group flex flex-col w-full md:w-2/3 lg:w-3/5 h-auto bg-gradient-to-r from-gray-950 to-gray-900 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.05)] overflow-hidden p-6">
@@ -117,10 +114,6 @@ export default async function DescLanding() {
             <JokerCard />
           </div>
         </div>
-        <Button cookiesPassed={{ access, refresh }} cookie={true}>
-          check cookies
-        </Button>
-        <TestButton>Hello</TestButton>
       </div>
     </div>
   );

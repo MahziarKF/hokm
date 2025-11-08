@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Changa } from "next/font/google";
 import { getToken } from "./lib/tokenValidation";
-import TokenChecker from "./TokenChecker";
-import { User } from "./lib/user";
+import { verifyAndReturnAccessPayload } from "./lib/jwt"; // your decode helper
 
 const changa = Changa({
   subsets: ["arabic"],
@@ -21,14 +20,31 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const access = await getToken("access");
-  const refresh = await getToken("refresh");
-  const user = await User(access || "");
-  console.log(user);
+
+  // 🧠 Decode user data from token if valid
+  let decodedUser = null;
+  if (access) {
+    try {
+      const payload = await verifyAndReturnAccessPayload(access);
+      decodedUser = payload || null;
+    } catch (err) {
+      console.error("Error decoding access token:", err);
+    }
+  }
 
   return (
     <html lang="fa" className={changa.className}>
-      <TokenChecker accessToken={access} refreshToken={refresh} />
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {/* 🪄 Embed the decoded user JSON for the client */}
+        <script
+          id="__USER__"
+          type="application/json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(decodedUser || null),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

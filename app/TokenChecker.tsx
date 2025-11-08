@@ -12,7 +12,6 @@ type PropType = {
 
 export default function TokenChecker({ accessToken, refreshToken }: PropType) {
   const pathName = usePathname();
-  const userStore = useUserStore();
   const { accessToken: accessTokenState, refreshAccessToken } = useAuthStore();
 
   useEffect(() => {

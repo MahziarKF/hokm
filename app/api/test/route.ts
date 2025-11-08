@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     const cookieStore = await cookies();
 
     cookieStore.delete("access-token");
+    cookieStore.delete("refresh-token");
     return NextResponse.json({ message: "success" }, { status: 201 });
   } catch (error) {
     console.log(error);
