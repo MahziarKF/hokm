@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { AuthStore, FormTypeSignup, FormTypeLogin } from "./storeTypes";
+import { AuthStore, FormTypeLogin, FormTypeSignup } from "../types/storeTypes";
+import { useUserStore } from "./useUserStore";
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   isLogin: false,
@@ -15,25 +16,53 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   } as FormTypeSignup,
 
   setVerificationModal: (value) => {
-    set((state) => ({ verificationModal: value }));
+    set({ verificationModal: value });
   },
   setErrorMessage: (msg: string) => {
     set((state) => ({
       form: { ...state.form, error: String(msg) },
     }));
   },
-
   setSuccessMessage: (msg: string) => {
     set((state) => ({
       form: { ...state.form, success: String(msg) },
     }));
   },
+  refreshAccessToken: async (refreshToken: string) => {
+    try {
+      const userStore = useUserStore.getState();
 
-  refreshAccessToken: async () => {
-    // placeholder implementation
-    return "";
+      const res = await fetch("/api/refreshAccessToken", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          refreshToken,
+          username: userStore.user?.username,
+          role: userStore.user?.role,
+          gamesplayed: userStore.user?.gamesplayed,
+        }),
+      });
+
+      // ✅ Parse response JSON
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Failed to refresh token:", data.error);
+        return "";
+      }
+
+      // ✅ Use parsed data
+      set({ accessToken: data.accessToken });
+
+      return data.accessToken;
+    } catch (error) {
+      console.log(
+        `error while refreshing access token -> AuthStore.ts -> ${error}`
+      );
+      return "";
+    }
   },
-
   // --- LOGIN ---
   login: async (form: FormTypeLogin) => {
     try {
@@ -49,18 +78,19 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       });
 
       const data = await res.json();
-
       if (!res.ok) {
         get().setErrorMessage(data.error || "خطا در ورود.");
         return;
       }
 
+      // ✅ Update user store
+      const userStore = useUserStore.getState();
+      userStore.setUser(data.user); // data.user should match PublicUser shape
+
       get().setSuccessMessage(data.message || "ورود موفقیت‌آمیز بود.");
       set(() => ({ isLogin: true, accessToken: data.accessToken }));
     } catch (error) {
-      console.error(
-        `error in zustand store -> auth store -> login(), error: ${error}`
-      );
+      console.error(`error in login(): ${error}`);
       get().setErrorMessage("مشکلی پیش آمده است.");
     }
   },
@@ -72,7 +102,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         get().setErrorMessage("رمز عبور و تکرار آن مطابقت ندارند.");
         return;
       }
-
       if (!form.username || !form.email || !form.password) {
         get().setErrorMessage("لطفا همه فیلدها را پر کنید.");
         return;
@@ -85,12 +114,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       });
 
       const data = await res.json();
-      console.log(data);
       if (!res.ok) {
         if (res.status === 500) return;
         get().setErrorMessage(data.error || "Unknown error");
         return;
       }
+
+      // ✅ Update user store
+      const userStore = useUserStore.getState();
+      userStore.setUser(data.user);
 
       get().setSuccessMessage(data.message || "ثبت‌نام موفقیت‌آمیز بود.");
       set(() => ({
@@ -99,9 +131,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         verificationModal: true,
       }));
     } catch (error) {
-      console.error(
-        `error in zustand store -> auth store -> signup(), error: ${error}`
-      );
+      console.error(`error in signup(): ${error}`);
       get().setErrorMessage("Something went wrong");
     }
   },

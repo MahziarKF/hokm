@@ -13,7 +13,7 @@ export type AuthStore = {
   setSuccessMessage: (msg: string) => void;
   login: (form: FormTypeLogin) => Promise<void>;
   signup: (form: FormTypeSignup) => Promise<void>;
-  refreshAccessToken: () => Promise<string>;
+  refreshAccessToken: (refreshToken: string) => Promise<string>;
 };
 
 // children types of Auth :

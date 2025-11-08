@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthModal from "../signupModal";
-import { useAuthDisplayStore } from "@/app/zustand/useComponentDisplayStore";
+import { useAuthDisplayStore } from "@/app/zustand/stores/useComponentDisplayStore";
 
 export default function Button({
   children,
@@ -10,20 +10,20 @@ export default function Button({
   navigate = [false, "/"],
   onClick,
   className = "",
+  cookie,
+  cookiesPassed,
 }: {
   children: Readonly<React.ReactNode>;
   callAuthModal?: boolean;
   navigate?: [boolean, string];
   onClick?: any;
   className?: string;
+  cookie?: boolean;
+  cookiesPassed?: any;
 }) {
   const router = useRouter();
   const show = useAuthDisplayStore((state) => state.show);
   const toggle = useAuthDisplayStore((state) => state.toggle);
-
-  const navigateTo = () => {
-    router.push(navigate[1]);
-  };
 
   const hasCustomBackground =
     className.includes("bg-") ||
@@ -34,10 +34,7 @@ export default function Button({
     if (navigate[0]) router.push(navigate[1]);
     else if (callAuthModal) toggle();
     else if (onClick) onClick();
-  };
-
-  const popAuthModal = () => {
-    toggle();
+    else if (cookie) console.log(cookiesPassed);
   };
   return (
     <>

@@ -12,13 +12,7 @@ export default function getAuthTokens(payload: object): tokenType {
       refresh: generateRefreshToken(payload),
     };
   } catch (error) {
-    console.log(
-      `an error accrured in lib -> token.ts -> getAuthTokens : ${error}`
-    );
-    return {
-      access: "",
-      refresh: "",
-    };
+    console.log(`error in lib -> token.ts -> getAuthTokens : ${error}`);
+    return { access: "", refresh: "" };
   }
 }
-

@@ -6,8 +6,13 @@ import { faShoppingCart, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Spade } from "../khal/hearts";
 import JokerCard from "./jokerCard";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { getToken } from "@/app/lib/tokenValidation";
+import TestButton from "../test/anyButton";
 
-export default function DescLanding() {
+export default async function DescLanding() {
+  const access = await getToken("access");
+  const refresh = await getToken("refresh");
   // Simulating user logged in state
   const user = false;
 
@@ -112,6 +117,10 @@ export default function DescLanding() {
             <JokerCard />
           </div>
         </div>
+        <Button cookiesPassed={{ access, refresh }} cookie={true}>
+          check cookies
+        </Button>
+        <TestButton>Hello</TestButton>
       </div>
     </div>
   );

@@ -36,11 +36,22 @@ export async function POST(req: NextRequest) {
     });
 
     // Generate JWT token
-    const tokens = getAuthTokens({ user: user.username });
+    const tokens = getAuthTokens({
+      username: user.username,
+      role: user.role,
+      gamesplayed: user.gamesplayed,
+    });
 
     // Create response and set cookie
     const response = NextResponse.json(
-      { success: "اکانت با موفقیت ساخته شد." },
+      {
+        success: "اکانت با موفقیت ساخته شد.",
+        user: {
+          username: user.username,
+          role: user.role,
+          gamesplayed: user.gamesplayed,
+        },
+      },
       { status: 201 }
     );
 

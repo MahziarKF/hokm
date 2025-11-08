@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/app/zustand/AuthStore";
+import { useAuthStore } from "@/app/zustand/stores/AuthStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -23,10 +23,10 @@ export default function AuthModal({ isOpen, onClose }: Props) {
 
   const [mode, setMode] = useState<"signup" | "login">("signup");
   const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: "mahziar",
+    email: `${Math.floor(Math.random() * 2009)}mahz@gmail.com`,
+    password: "ssssssss",
+    confirmPassword: "ssssssss",
   });
   const [loading, setLoading] = useState(false);
   const [verificationValue, setVerificationValue] = useState("");
@@ -51,7 +51,7 @@ export default function AuthModal({ isOpen, onClose }: Props) {
           success: "",
         });
         setUsername(form.username);
-        setVerificationModal(true); // ✅ open verification modal
+        // setVerificationModal(true); // ✅ open verification modal
       } else {
         await login({
           username: form.username,
