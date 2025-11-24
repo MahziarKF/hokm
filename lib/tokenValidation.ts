@@ -15,12 +15,21 @@ export async function IsAccessTokenValid(): Promise<boolean> {
   }
 }
 
-export async function refreshAccessToken() {
+export async function refreshAccessToken(alreadyGeneratedToken?: string) {
   try {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get("refresh-token")?.value || "";
     if (!refreshToken) return;
-
+    if (alreadyGeneratedToken) {
+      cookieStore.set("access-token", alreadyGeneratedToken, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+        maxAge: 60 * 60,
+        path: "/",
+      });
+      return;
+    }
     // ✅ Use absolute URL that works both locally and in production
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ||

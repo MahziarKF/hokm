@@ -1,45 +1,43 @@
 import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { NextRequest, NextResponse } from "next/server";
 import getAuthTokens from "@/lib/token";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const { username, password } = body;
 
-    if (!body.username || !body.password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "لطفا پسورد و یوزرنیم خود را وارد کنید." },
+        { error: ">:" + " کاکا با چی من شناساییت کنم اخه" },
         { status: 400 }
       );
     }
 
     // Check if user exists
-    const doesUserExist = await prisma.user.findFirst({
-      where: { username: body.username },
+    const user = await prisma.user.findFirst({
+      where: { AND: [{ username }] },
     });
 
-    if (doesUserExist) {
+    if (!user) {
       return NextResponse.json(
-        { error: "یه اسکلی این اسمو برداشته" },
-        { status: 400 }
+        {
+          error: "پسورد یا نام کاربری اشتباهه داش.",
+        },
+        { status: 401 }
       );
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(String(body.password), 12);
+    const doesPasswordMatches = await bcrypt.compare(password, user.password);
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        username: String(body.username),
-        password: hashedPassword,
-        role: "user",
-        email: String(body.email),
-      },
-    });
+    if (!doesPasswordMatches) {
+      return NextResponse.json(
+        { error: "پسورد یا نام کاربری اشتباهه داش." },
+        { status: 401 }
+      );
+    }
 
-    // Generate JWT token
     const tokens = getAuthTokens({
       id: user.id,
       username: user.username,
@@ -47,11 +45,11 @@ export async function POST(req: NextRequest) {
       gamesplayed: user.gamesplayed,
     });
 
-    // Create response and set cookie
     const response = NextResponse.json(
       {
         success: "(;" + "جون " + user.username + " خوش آمدی",
         user: {
+          id: user.id,
           username: user.username,
           role: user.role,
           gamesplayed: user.gamesplayed,

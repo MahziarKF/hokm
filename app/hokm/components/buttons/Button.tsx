@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthModal from "../signupModal";
 import { useAuthDisplayStore } from "@/app/zustand/stores/useComponentDisplayStore";
+import { useUserStore } from "@/app/zustand/stores/useUserStore";
 
 export default function Button({
   children,
@@ -24,6 +25,7 @@ export default function Button({
   const router = useRouter();
   const show = useAuthDisplayStore((state) => state.show);
   const toggle = useAuthDisplayStore((state) => state.toggle);
+  const user = useUserStore((s) => s.user);
 
   const hasCustomBackground =
     className.includes("bg-") ||

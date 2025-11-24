@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["deckofcardsapi.com"],
   },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
+
+    return config;
+  },
 };
 
 export default nextConfig;

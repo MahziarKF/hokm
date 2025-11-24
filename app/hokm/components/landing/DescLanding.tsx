@@ -1,18 +1,9 @@
-"use client";
 import { LinearGradient } from "react-text-gradients";
-import Button from "../buttons/Button";
-import ReemKufiText from "../layouts/fonts/reemKufi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faUser } from "@fortawesome/free-solid-svg-icons";
-import { Spade } from "../khal/hearts";
 import JokerCard from "./jokerCard";
-import { useUserStore } from "@/app/zustand/stores/useUserStore";
+import Buttons from "./Buttons.tsx";
 import TestButton from "../test/anyButton";
 
 export default function DescLanding() {
-  const user = useUserStore((s) => s.user);
-  console.log("User from token:", user);
-
   return (
     <div className="relative group flex flex-col w-full md:w-2/3 lg:w-3/5 h-auto bg-gradient-to-r from-gray-950 to-gray-900 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.05)] overflow-hidden p-6">
       {/* Neon/Glow Effect */}
@@ -62,53 +53,9 @@ export default function DescLanding() {
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-col md:flex-row md:flex-nowrap justify-center md:justify-between w-full gap-3 sm:gap-4 pt-4 border-t border-gray-300/40">
-              {!user ? (
-                <Button className="flex-1 md:flex-auto" callAuthModal={true}>
-                  <ReemKufiText className="text-base sm:text-lg md:text-[22px]">
-                    ثبت نام
-                  </ReemKufiText>
-                </Button>
-              ) : (
-                <Button
-                  className="flex-1 md:flex-auto bg-gradient-to-tl from-orange-600 to-orange-700 hover:from-orange-600 hover:via-orange-700 hover:to-orange-800"
-                  navigate={[true, "/game"]}
-                >
-                  <ReemKufiText className="text-base sm:text-lg md:text-[22px]">
-                    لابی حکم
-                  </ReemKufiText>
-                  <Spade />
-                </Button>
-              )}
-
-              <Button
-                className="flex-1 md:flex-auto bg-gradient-to-tl from-purple-600 to-purple-700"
-                navigate={[true, "/store"]}
-              >
-                <ReemKufiText className="flex flex-row-reverse items-center justify-center gap-2 text-base sm:text-lg md:text-[22px]">
-                  <FontAwesomeIcon
-                    className="w-5 h-5 md:w-6 md:h-6"
-                    icon={faShoppingCart}
-                  />
-                  فروشگاه
-                </ReemKufiText>
-              </Button>
-
-              <Button
-                className="flex-1 md:flex-auto bg-gradient-to-tl from-emerald-600 to-emerald-700"
-                navigate={[true, "/profile"]}
-              >
-                <ReemKufiText className="flex flex-row-reverse items-center justify-center gap-2 text-base sm:text-lg md:text-[22px]">
-                  <FontAwesomeIcon
-                    className="w-5 h-5 md:w-6 md:h-6"
-                    icon={faUser}
-                  />
-                  پروفایل
-                </ReemKufiText>
-              </Button>
-            </div>
+            <Buttons />
+            <TestButton>s</TestButton>
           </div>
-
           {/* Joker Card */}
           <div className="relative w-full h-40 md:h-60 md:w-1/3 rounded-2xl overflow-hidden mt-4 md:mt-0">
             <JokerCard />

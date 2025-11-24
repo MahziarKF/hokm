@@ -1,33 +1,40 @@
-import dotenv from "dotenv";
+import express from "express";
 import http from "http";
-import jwt from "jsonwebtoken";
 import { Server } from "socket.io";
-dotenv.config({ path: "./../.env" });
 
-// Create a basic HTTP server
+// --- Initialize Express app ---
+const app = express();
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end("Socket.IO server running without Express");
+// Example REST route
+app.get("/", (_req, res) => {
+  res.send("Socket.IO + Express server running!");
 });
-// Attach Socket.IO to the raw server
+
+// --- Create HTTP server from Express ---
+const server = http.createServer(app);
+
+// --- Attach Socket.IO ---
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*", // adjust to your frontend URL
     credentials: true,
   },
 });
-io.use((socket, next) => {
-  try {
-    const { accessToken } = socket.handshake.auth;
-    if (!token) return next(new Error("no token error."));
-  } catch (error) {}
-});
-// Handle socket connections
+
+// --- Socket event handling ---
 io.on("connection", (socket) => {
-  // after auth
-  io.on("joinGame", ({ token, gameType, username }) => {});
+  console.log("✅ Client connected:", socket.id);
+
+  socket.on("joinGame", (data) => {
+    console.log("joinGame event:", data);
+    // e.g. socket.join(`room:${data.gameType}`);
+  });
+
+  socket.on("disconnect", (reason) => {
+    console.log(`❌ Client disconnected (${socket.id}) reason: ${reason}`);
+  });
 });
 
-// Start the server
-server.listen(3001, () => console.log("Server listening on port 3000"));
+// --- Start the server ---
+const PORT = 5000;
+server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

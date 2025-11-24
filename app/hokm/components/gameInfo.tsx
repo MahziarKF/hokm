@@ -19,7 +19,7 @@ export default function GameInfo() {
     });
     gsap.to(iconRef.current, {
       duration: 0.5,
-      rotate: open ? 180 : 0,
+      rotate: open ? 0 : 180,
       ease: "power1.inOut",
     });
     gsap.to(textContainerRef.current, {

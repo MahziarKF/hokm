@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { useUserStore } from "./zustand/stores/useUserStore";
 import { useAuthStore } from "./zustand/stores/AuthStore";
 
 type PropType = {
@@ -19,6 +18,7 @@ export default function TokenChecker({ accessToken, refreshToken }: PropType) {
       if (!accessToken && refreshToken) {
         try {
           await refreshAccessToken(refreshToken);
+          // location.reload();
         } catch (error) {
           console.log(
             `error while refreshing access token -> TokenChecker -> ${error}`

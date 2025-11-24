@@ -1,11 +1,11 @@
-import { generateAccessToken, verifyRefreshToken } from "@/app/lib/jwt";
+import { generateAccessToken, verifyRefreshToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { refreshToken, username, role, gamesplayed } = body;
+    const { refreshToken, id, username, role, gamesplayed } = body;
 
     if (!verifyRefreshToken(refreshToken)) {
       return NextResponse.json(
@@ -14,7 +14,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newAccessToken = generateAccessToken({ username, role, gamesplayed });
+    const newAccessToken = generateAccessToken({
+      id,
+      username,
+      role,
+      gamesplayed,
+    });
     const cookieStore = await cookies();
     cookieStore.set("access-token", newAccessToken, {
       httpOnly: true,

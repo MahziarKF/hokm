@@ -1,16 +1,34 @@
 export function Heart() {
-  return <span>♥️</span>;
+  return (
+    <span className="text-[3.3rem] text-red-600 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)]">
+      ♥
+    </span>
+  );
 }
+
 export function Diamond() {
-  return <span>♦️</span>;
+  return (
+    <span className="text-[3.5rem] text-red-600 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)]">
+      ♦
+    </span>
+  );
 }
 export function Spade() {
   return (
-    <span className="text-[2rem] text-purple-800 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)]">
+    <span className="text-[3.5rem] text-gray-700 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)]">
       ♠
     </span>
   );
 }
+
+export function SpadeDefault() {
+  return <span>♠</span>;
+}
+
 export function Club() {
-  return <span>♣️</span>;
+  return (
+    <span className="text-[3.3rem] text-gray-700 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)]">
+      ♣
+    </span>
+  );
 }

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { AuthStore, FormTypeLogin, FormTypeSignup } from "../types/storeTypes";
 import { useUserStore } from "./useUserStore";
+import { useRouter } from "next/router";
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   isLogin: false,
@@ -28,22 +29,26 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       form: { ...state.form, success: String(msg) },
     }));
   },
+  setAccessToken: (accessToken) => {
+    set({ accessToken });
+  },
   refreshAccessToken: async (refreshToken: string) => {
     try {
       const userStore = useUserStore.getState();
-
+      console.log(userStore);
       const res = await fetch("/api/refreshAccessToken", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           refreshToken,
+          id: userStore.user?.id,
           username: userStore.user?.username,
           role: userStore.user?.role,
           gamesplayed: userStore.user?.gamesplayed,
         }),
       });
-      
+
       // ✅ Parse response JSON
       const data = await res.json();
 

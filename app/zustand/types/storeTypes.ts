@@ -14,6 +14,7 @@ export type AuthStore = {
   login: (form: FormTypeLogin) => Promise<void>;
   signup: (form: FormTypeSignup) => Promise<void>;
   refreshAccessToken: (refreshToken: string) => Promise<string>;
+  setAccessToken: (accessToken: string) => void;
 };
 
 // children types of Auth :
@@ -30,4 +31,9 @@ export type FormTypeLogin = {
   password: string;
   error: string;
   success: string;
+};
+
+export type LobbyStoreType = {
+  selectedGameMode: "1v1" | "2v2" | "poker" | "bj" | null;
+  setGameMode: (gameMode: "1v1" | "2v2" | "poker" | "bj" | null) => void;
 };

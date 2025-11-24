@@ -1,23 +1,14 @@
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
-let socket: Socket | null = null;
+const funnyLongConnectionDOIDOIDKLMAO = false;
+const funnyLongConnectionDOIDOIDKLMAOURL =
+  "https://9gkwjjs5-3001.euw.devtunnels.ms/";
 
-// initialize socket
-export const connectSocket = (accessToken: string) => {
-  if (!socket) {
-    socket = io("http://localhost:3001", { auth: { accessToken } });
+export const socket = io(
+  funnyLongConnectionDOIDOIDKLMAO
+    ? funnyLongConnectionDOIDOIDKLMAOURL
+    : "http://localhost:3001",
+  {
+    autoConnect: false,
   }
-
-  if (!socket.connected) socket.connect();
-
-  return socket;
-};
-
-export const getSocket = () => socket;
-
-export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
-};
+);
